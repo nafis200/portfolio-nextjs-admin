@@ -30,7 +30,7 @@ export default function RootLayout({
       >
        
         <Navbar1/>
-        <div className="min-h-screen w-[90%] mx-auto">{children}</div>
+        <div className="min-h-screen mx-auto">{children}</div>
       </body>
     </html>
   );
