@@ -1,4 +1,5 @@
-import Banner from "./components/homepages/Banner";
+import Skills from "@/components/homepages/Skills";
+import Banner from "../components/homepages/Banner";
 
 const HomePage = () => {
   return (
@@ -7,6 +8,7 @@ const HomePage = () => {
       <div className="mt-5">
         <Banner />
       </div>
+        <Skills/>
     </div>
   );
 };
