@@ -38,7 +38,7 @@ const Singleproduct = ({ projectId }: { projectId: string }) => {
 
   if (loading) return <p>Loading project...</p>;
 
-  console.log(project);
+  
 
   return (
     <div>

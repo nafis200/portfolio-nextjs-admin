@@ -1,8 +1,7 @@
-
 "use server"
 
-const projectUser = async() => {
-    const res = await fetch(`${process.env.BACKEND_URL}/project`, {
+const Blogsfetch = async() => {
+    const res = await fetch(`${process.env.BACKEND_URL}/blogs`, {
         method: "GET", 
         headers: {
             "Content-Type": "application/json"
@@ -14,4 +13,4 @@ const projectUser = async() => {
     return projectData.data;
 };
 
-export default projectUser;
+export default Blogsfetch;
