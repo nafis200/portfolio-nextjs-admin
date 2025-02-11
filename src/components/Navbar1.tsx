@@ -11,8 +11,8 @@ const Navbar1 = () => {
     { href: "/", label: "Home" },
     { href: "/projects", label: "Projects" },
     { href: "/blogs", label: "Blogs" },
-    { href: "/about", label: "About Us" },
-    { href: "/support", label: "Support" },
+    { href: "/contact", label: "Contact" },
+    { href: "/dashboard", label: "Dashboard" },
   ];
 
   const [theme, setTheme] = useState<"light" | "dark">("light");

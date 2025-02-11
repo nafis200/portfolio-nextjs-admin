@@ -79,7 +79,6 @@ const Sidebar = () => {
             </ul>
           </li>
 
-          {/* Project Management */}
           <li>
             <span className="text-gray-600 font-semibold">Project Management</span>
             <ul className="space-y-2 pl-6">
@@ -126,10 +125,9 @@ const Sidebar = () => {
             </ul>
           </li>
 
-          {/* Message Seen */}
           <li>
             <Link
-              href="/dashboard/message-seen"
+              href="/dashboard/message"
               className="flex items-center space-x-2 p-3 rounded-md hover:bg-gray-200 text-gray-700"
               onClick={() => setIsOpen(false)}
             >
