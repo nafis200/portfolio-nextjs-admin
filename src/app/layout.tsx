@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar1 from "../components/Navbar1";
-import Providers from "@/lib/Providers";
+import { authOptions } from "@/utils/authOptions";
+import { getServerSession } from "next-auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,21 +20,22 @@ export const metadata: Metadata = {
   description: "It is my professional portfolio where i introduced my skills",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions)
   return (
-    <Providers>
+
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Navbar1 />
+          <Navbar1 session={session} />
           <div className="min-h-screen mx-auto">{children}</div>
         </body>
       </html>
-    </Providers>
+   
   );
 }
