@@ -2,17 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
+// import { signOut } from "next-auth/react"; // You can keep or remove if you don't use next-auth signOut
 import { usePathname } from "next/navigation";
-interface UserProps {
-  user?: {
-    name?: string | null | undefined;
-    email?: string | null | undefined;
-    image?: string | null | undefined;
-  };
+import { getCookie, deleteCookie } from "cookies-next";
+
+interface User {
+  email?: string;
+  role?: string;
 }
 
-const Navbar1 = ({ session }: { session: UserProps | null }) => {
+const Navbar1 = () => {
   const pathname = usePathname();
 
   const navLinks = [
@@ -24,6 +23,7 @@ const Navbar1 = ({ session }: { session: UserProps | null }) => {
   ];
 
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [user, setUser] = useState<User | null>(null);
 
   const handleToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTheme = e.target.checked ? "dark" : "light";
@@ -33,12 +33,36 @@ const Navbar1 = ({ session }: { session: UserProps | null }) => {
   };
 
   useEffect(() => {
+    // Theme initialization
     if (typeof window !== "undefined") {
       const localTheme = localStorage.getItem("theme") || "light";
       setTheme(localTheme as "light" | "dark");
       document.documentElement.setAttribute("data-theme", localTheme);
+
+      // Read user cookie and set user state
+      const userCookie = getCookie("user");
+      if (userCookie && typeof userCookie === "string") {
+        try {
+          setUser(JSON.parse(userCookie));
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
     }
   }, []);
+
+  const handleLogout = () => {
+    // Remove cookie and update state
+    deleteCookie("user");
+    setUser(null);
+    // Optionally call signOut from next-auth if you use it
+    // signOut();
+    // Redirect to homepage or login
+    window.location.href = "/";
+  };
 
   const links = (
     <>
@@ -125,6 +149,7 @@ const Navbar1 = ({ session }: { session: UserProps | null }) => {
             {links}
           </ul>
         </div>
+        {/* Logo Link if needed */}
         {/* <Link href="/" className="btn btn-ghost text-xl">
           <Image src="/logo.png" alt="Logo" width={40} height={40} />
         </Link> */}
@@ -142,13 +167,13 @@ const Navbar1 = ({ session }: { session: UserProps | null }) => {
           Resume
         </a>
 
-        {session?.user ? (
-          <button onClick={() => signOut()} className="btn btn-neutral ml-2">
-            logout
+        {user ? (
+          <button onClick={handleLogout} className="btn btn-neutral ml-2">
+            Logout
           </button>
         ) : (
           <Link href="/login">
-            <button className="btn btn-neutral ml-2">login</button>
+            <button className="btn btn-neutral ml-2">Login</button>
           </Link>
         )}
       </div>

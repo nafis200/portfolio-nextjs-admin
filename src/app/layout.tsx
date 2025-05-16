@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar1 from "../components/Navbar1";
 import { authOptions } from "@/utils/authOptions";
 import { getServerSession } from "next-auth";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default async function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Navbar1 session={session} />
+          <Toaster richColors position="top-center" />
           <div className="min-h-screen mx-auto">{children}</div>
         </body>
       </html>
