@@ -33,17 +33,18 @@ const Navbar1 = () => {
   };
 
   useEffect(() => {
-    // Theme initialization
+
     if (typeof window !== "undefined") {
       const localTheme = localStorage.getItem("theme") || "light";
       setTheme(localTheme as "light" | "dark");
       document.documentElement.setAttribute("data-theme", localTheme);
 
-      // Read user cookie and set user state
+  
       const userCookie = getCookie("user");
       if (userCookie && typeof userCookie === "string") {
         try {
           setUser(JSON.parse(userCookie));
+
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           setUser(null);
@@ -55,13 +56,10 @@ const Navbar1 = () => {
   }, []);
 
   const handleLogout = () => {
-    // Remove cookie and update state
+    
     deleteCookie("user");
     setUser(null);
-    // Optionally call signOut from next-auth if you use it
-    // signOut();
-    // Redirect to homepage or login
-    window.location.href = "/";
+    window.location.href = "/login";
   };
 
   const links = (

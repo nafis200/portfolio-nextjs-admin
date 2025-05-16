@@ -51,9 +51,9 @@ const ProjectForm = () => {
     <div className="flex items-center justify-center min-h-screen">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-2xl shadow-lg max-w-lg w-full space-y-4"
+        className="p-6 rounded-2xl shadow-lg max-w-lg w-full space-y-4"
       >
-        <h2 className="text-2xl font-semibold text-black text-center mt-20">Create Project</h2>
+        <h2 className="text-2xl font-semibold text-blue-400 text-center mt-20">Create Project</h2>
 
         <div>
           <label className="block text-black font-medium">Image URL</label>

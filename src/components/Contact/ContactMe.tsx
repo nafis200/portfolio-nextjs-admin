@@ -34,7 +34,7 @@ const ContactMe  = () => {
     <div className="flex items-center justify-center min-h-screen  p-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-2xl shadow-lg max-w-lg w-full space-y-4"
+        className="p-6 rounded-2xl shadow-lg max-w-lg w-full space-y-4"
       >
         <h2 className="text-2xl font-semibold text-gray-700 text-center">
           Sent message

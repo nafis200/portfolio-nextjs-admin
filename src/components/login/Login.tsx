@@ -37,7 +37,7 @@ const Login = () => {
         maxAge: 60 * 60 * 24,
       });
       toast.success("Welcome Admin!");
-      router.push("/dashboard"); // useRouter from 'next/navigation' handles this in App Router
+      router.push("/dashboard"); 
     } else {
       toast.error("You are not an admin");
     }
@@ -46,7 +46,7 @@ const Login = () => {
   return (
     <div className="w-[90%] max-w-5xl mx-auto py-10">
       <h1 className="text-center mt-20 text-4xl mb-8 font-bold">
-        Login <span className="text-teal-500">Here</span>
+        Login <span className="text-teal-500">Only for admin not general user</span>
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div>
@@ -101,7 +101,7 @@ const Login = () => {
 
           <p className="text-center mt-6 text-sm text-gray-600">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-teal-500 hover:underline">
+            <Link href="#" className="text-teal-500 hover:underline">
               Create an account
             </Link>
           </p>
