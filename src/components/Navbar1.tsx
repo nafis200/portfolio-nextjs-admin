@@ -32,31 +32,53 @@ const Navbar1 = () => {
     document.documentElement.setAttribute("data-theme", newTheme);
   };
 
+  // useEffect(() => {
+
+  //   if (typeof window !== "undefined") {
+  //     const localTheme = localStorage.getItem("theme") || "light";
+  //     setTheme(localTheme as "light" | "dark");
+  //     document.documentElement.setAttribute("data-theme", localTheme);
+
+  //     const userCookie = getCookie("user");
+  //     if (userCookie && typeof userCookie === "string") {
+  //       try {
+  //         setUser(JSON.parse(userCookie));
+
+  //       // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //       } catch (error) {
+  //         setUser(null);
+  //       }
+  //     } else {
+  //       setUser(null);
+  //     }
+  //   }
+  // }, []);
+
   useEffect(() => {
-
-    if (typeof window !== "undefined") {
-      const localTheme = localStorage.getItem("theme") || "light";
-      setTheme(localTheme as "light" | "dark");
-      document.documentElement.setAttribute("data-theme", localTheme);
-
-  
+    const fetchUser = () => {
       const userCookie = getCookie("user");
       if (userCookie && typeof userCookie === "string") {
         try {
           setUser(JSON.parse(userCookie));
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           setUser(null);
         }
       } else {
         setUser(null);
       }
-    }
+    };
+
+    fetchUser();
+
+    window.addEventListener("userLoginStatusChanged", fetchUser);
+
+    return () => {
+      window.removeEventListener("userLoginStatusChanged", fetchUser);
+    };
   }, []);
 
   const handleLogout = () => {
-    
     deleteCookie("user");
     setUser(null);
     window.location.href = "/login";

@@ -37,6 +37,7 @@ const Login = () => {
         maxAge: 60 * 60 * 24,
       });
       toast.success("Welcome Admin!");
+       window.dispatchEvent(new Event("userLoginStatusChanged"));
       router.push("/dashboard"); 
     } else {
       toast.error("You are not an admin");
