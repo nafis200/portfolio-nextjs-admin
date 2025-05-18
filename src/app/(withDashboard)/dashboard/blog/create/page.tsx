@@ -6,9 +6,20 @@ import { toast } from "sonner";
 import createBlogs from "@/utils/actions/createBlogs";
 import Image from "next/image";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { EditorState, convertToRaw, ContentState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import draftToHtml from "draftjs-to-html";
+
+
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 const BlogCreate = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -25,13 +36,19 @@ const BlogCreate = () => {
     setPreviewUrl(null);
   };
 
+  const onEditorStateChange = (state: EditorState) => {
+    setEditorState(state);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const title = ((form.title as unknown) as HTMLInputElement).value.trim();
-    const description = (form.description as HTMLTextAreaElement).value.trim();
 
-    if (!title || !description) {
+  
+    const description = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+
+    if (!title || !description || description === "<p></p>\n") {
       toast.error("Title and description are required");
       return;
     }
@@ -56,22 +73,22 @@ const BlogCreate = () => {
       if (res?.success) {
         toast.success("Successfully created blog!");
         form.reset();
-        handleRemoveImage(); 
+        setEditorState(EditorState.createEmpty());
+        handleRemoveImage();
       } else {
         toast.error("Failed to create blog");
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Something went wrong!");
       console.error(error);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen mt-10 p-4">
+    <div className="flex items-center justify-center min-h-screen mt-20 p-4">
       <form
         onSubmit={handleSubmit}
-        className="p-6 rounded-2xl shadow-lg max-w-lg w-full space-y-4 bg-white"
+        className="p-6 rounded-2xl shadow-lg max-w-lg w-full space-y-4"
       >
         <h2 className="text-2xl font-semibold text-gray-700 text-center">
           Create Blog
@@ -135,12 +152,13 @@ const BlogCreate = () => {
           <label className="block text-gray-600 font-medium mb-1">
             Description
           </label>
-          <textarea
-            name="description"
-            placeholder="Enter description"
-            rows={4}
-            className="textarea textarea-primary w-full"
-            required
+
+          <Editor
+            editorState={editorState}
+            toolbarClassName="toolbarClassName"
+            wrapperClassName="wrapperClassName border border-gray-300 rounded-md"
+            editorClassName="min-h-[200px] p-2"
+            onEditorStateChange={onEditorStateChange}
           />
         </div>
 

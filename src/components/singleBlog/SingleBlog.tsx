@@ -3,6 +3,7 @@
 import Blogsfetch from "@/utils/actions/Blogsfetch";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import DOMPurify from "dompurify";
 
 interface Blog {
   _id: string;
@@ -40,21 +41,26 @@ const SingleBlog = ({ blogId }: { blogId: string }) => {
 
   return (
     <>
-    <h1>.</h1>
-    <h1 className="mt-20">.</h1>
-    <div className="w-full mx-auto shadow-lg rounded-lg overflow-hidden p-4 flex flex-col md:flex-row items-center gap-10 space-y-5">
-      <Image
-        src={blog.image}
-        alt={blog.title}
-        width={150}
-        height={150}
-        className="w-36 h-36 object-cover rounded-md"
-      />
-      <div className="flex-1">
-        <h2 className="text-xl font-bold">{blog.title}</h2>
-        <p className="mt-2 text-sm">{blog.description}</p>
+      <h1>.</h1>
+      <h1 className="mt-20">.</h1>
+      <div className="w-full mx-auto shadow-lg rounded-lg overflow-hidden p-4 flex flex-col md:flex-row items-center gap-10 space-y-5">
+        <Image
+          src={blog.image}
+          alt={blog.title}
+          width={150}
+          height={150}
+          className="w-36 h-36 object-cover rounded-md"
+        />
+        <div className="flex-1">
+          <h2 className="text-xl font-bold">{blog.title}</h2>
+          <div
+            className="mt-2 text-sm prose"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(blog.description),
+            }}
+          ></div>
+        </div>
       </div>
-    </div>
     </>
   );
 };
