@@ -6,20 +6,115 @@ import { toast } from "sonner";
 import createBlogs from "@/utils/actions/createBlogs";
 import Image from "next/image";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { EditorState, convertToRaw, ContentState } from "draft-js";
-import { Editor } from "react-draft-wysiwyg";
-import draftToHtml from "draftjs-to-html";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline"; 
 
+const MenuBar = ({ editor }: { editor: ReturnType<typeof useEditor> | null }) => {
+  if (!editor) {
+    return null;
+  }
 
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+  return (
+    <div className="flex gap-2 mb-2 flex-wrap">
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().toggleBold().run()}
+        className={editor.isActive("bold") ? "btn-active btn" : "btn"}
+        title="Bold"
+      >
+        <b>B</b>
+      </button>
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().toggleItalic().run()}
+        className={editor.isActive("italic") ? "btn-active btn" : "btn"}
+        title="Italic"
+      >
+        <i>I</i>
+      </button>
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().toggleUnderline().run()}
+        className={editor.isActive("underline") ? "btn-active btn" : "btn"}
+        title="Underline"
+      >
+        <u>U</u>
+      </button>
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+        className={editor.isActive("heading", { level: 1 }) ? "btn-active btn" : "btn"}
+        title="Heading 1"
+      >
+        H1
+      </button>
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+        className={editor.isActive("heading", { level: 2 }) ? "btn-active btn" : "btn"}
+        title="Heading 2"
+      >
+        H2
+      </button>
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        className={editor.isActive("bulletList") ? "btn-active btn" : "btn"}
+        title="Bullet List"
+      >
+        • List
+      </button>
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        className={editor.isActive("orderedList") ? "btn-active btn" : "btn"}
+        title="Ordered List"
+      >
+        1. List
+      </button>
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().undo().run()}
+        title="Undo"
+        className="btn"
+      >
+        ↺
+      </button>
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().redo().run()}
+        title="Redo"
+        className="btn"
+      >
+        ↻
+      </button>
+    </div>
+  );
+};
 
 const BlogCreate = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
-  );
+
+  const editor = useEditor({
+    extensions: [StarterKit, Underline],
+    content: "<p></p>",
+    editorProps: {
+      attributes: {
+        class:
+          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none min-h-[150px]",
+      },
+    },
+  });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -36,19 +131,14 @@ const BlogCreate = () => {
     setPreviewUrl(null);
   };
 
-  const onEditorStateChange = (state: EditorState) => {
-    setEditorState(state);
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const title = ((form.title as unknown) as HTMLInputElement).value.trim();
 
-  
-    const description = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    const description = editor?.getHTML();
 
-    if (!title || !description || description === "<p></p>\n") {
+    if (!title || !description || description === "<p></p>") {
       toast.error("Title and description are required");
       return;
     }
@@ -69,11 +159,10 @@ const BlogCreate = () => {
 
     try {
       const res = await createBlogs(formData);
-
       if (res?.success) {
         toast.success("Successfully created blog!");
         form.reset();
-        setEditorState(EditorState.createEmpty());
+        editor?.commands.setContent("<p></p>");
         handleRemoveImage();
       } else {
         toast.error("Failed to create blog");
@@ -124,7 +213,6 @@ const BlogCreate = () => {
                 width={500}
                 height={256}
                 className="w-full h-64 object-cover rounded-md"
-                style={{ objectFit: "cover" }}
               />
               <button
                 type="button"
@@ -152,14 +240,16 @@ const BlogCreate = () => {
           <label className="block text-gray-600 font-medium mb-1">
             Description
           </label>
+  
+          <MenuBar editor={editor} />
 
-          <Editor
-            editorState={editorState}
-            toolbarClassName="toolbarClassName"
-            wrapperClassName="wrapperClassName border border-gray-300 rounded-md"
-            editorClassName="min-h-[200px] p-2"
-            onEditorStateChange={onEditorStateChange}
-          />
+          <div className="border border-gray-300 rounded-md p-2 min-h-[150px]">
+            {editor ? (
+              <EditorContent editor={editor} />
+            ) : (
+              <p>Loading editor...</p>
+            )}
+          </div>
         </div>
 
         <div className="flex justify-center">
