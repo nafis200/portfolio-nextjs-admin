@@ -9,6 +9,8 @@ import {
   FaMapMarkerAlt,
 } from "react-icons/fa";
 import createMessage from "@/utils/actions/createMessage";
+import { toast } from "sonner";
+
 
 const ContactMe = () => {
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,11 +27,11 @@ const ContactMe = () => {
       const res = await createMessage(data);
 
       if (res?.success) {
-        alert("Successfully sent Message");
+        toast.success("Successfully sent Message");
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      alert("Something went wrong");
+      toast.error("EMail subject body must be need");
       throw new Error(err.message);
     }
   };
