@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-// import { signOut } from "next-auth/react"; // You can keep or remove if you don't use next-auth signOut
 import { usePathname } from "next/navigation";
 import { getCookie, deleteCookie } from "cookies-next";
 
@@ -15,11 +14,7 @@ const Navbar1 = () => {
   const pathname = usePathname();
 
   const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/projects", label: "Projects" },
-    { href: "/blogs", label: "Blogs" },
-    { href: "/contact", label: "Contact" },
-    { href: "/experience", label: "Experience" },
+    // { href: "/", label: "Home" },
     { href: "/dashboard", label: "Dashboard" },
   ];
 
@@ -33,27 +28,6 @@ const Navbar1 = () => {
     document.documentElement.setAttribute("data-theme", newTheme);
   };
 
-  // useEffect(() => {
-
-  //   if (typeof window !== "undefined") {
-  //     const localTheme = localStorage.getItem("theme") || "light";
-  //     setTheme(localTheme as "light" | "dark");
-  //     document.documentElement.setAttribute("data-theme", localTheme);
-
-  //     const userCookie = getCookie("user");
-  //     if (userCookie && typeof userCookie === "string") {
-  //       try {
-  //         setUser(JSON.parse(userCookie));
-
-  //       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //       } catch (error) {
-  //         setUser(null);
-  //       }
-  //     } else {
-  //       setUser(null);
-  //     }
-  //   }
-  // }, []);
 
   useEffect(() => {
     const fetchUser = () => {
