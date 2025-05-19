@@ -5,28 +5,25 @@ import Image from "next/image";
 const DashboardPage = async () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const session = await getServerSession(authOptions);
-  return (
-    <div>
-      <h1>.</h1>
-      <h1 className="mt-20">.</h1>
-      <div className="lg:ml-[130px]">
-        <>
-          <h1 className="text-4xl text-center mt-10">
-            Welcome To nafis ahamed
-          </h1>
-          <h1 className="text-4xl text-center mt-10 mb-10">
-            Welcome To nafisahamed14@gmail.com
-          </h1>
-
-          <Image
-            src="https://i.postimg.cc/jjGLxfHz/nafis.jpg"
-            width={200}
-            height={200}
-            alt="image"
-            className="mx-auto rounded-full object-cover aspect-square"
-          />
-        </>
+   return (
+    <div className="px-4 sm:px-6 md:px-10 lg:ml-[130px]">
+      
+      <div className="mx-auto mt-40 w-40 h-40 sm:w-48 sm:h-48 md:w-52 md:h-52 rounded-full overflow-hidden">
+        <Image
+          src="https://i.postimg.cc/jjGLxfHz/nafis.jpg"
+          alt="nafis ahamed"
+          width={208} 
+          height={208}
+          className="object-cover rounded-full"
+          priority
+        />
       </div>
+        <h1 className="mt-6 text-center text-2xl sm:text-3xl md:text-4xl font-semibold">
+        Welcome To Nafis Ahamed
+      </h1>
+      <h2 className="mt-4 mb-8 text-center text-lg sm:text-xl md:text-2xl font-medium text-gray-700">
+        Welcome To nafisahamed14@gmail.com
+      </h2>
     </div>
   );
 };
