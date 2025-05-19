@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { getCookie, deleteCookie } from "cookies-next";
+import { getCookie } from "cookies-next";
+import { toast } from "sonner";
+import { logoutUser } from "@/utils/actions/logoutUser";
 
 interface User {
   email?: string;
@@ -13,13 +15,11 @@ interface User {
 
 const Navbar1 = () => {
   const pathname = usePathname();
-
-  const navLinks = [
-    { href: "/dashboard", label: "Dashboard" },
-  ];
-
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [user, setUser] = useState<User | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  const navLinks = [{ href: "/dashboard", label: "Dashboard" }];
 
   const handleToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTheme = e.target.checked ? "dark" : "light";
@@ -28,34 +28,38 @@ const Navbar1 = () => {
     document.documentElement.setAttribute("data-theme", newTheme);
   };
 
-  useEffect(() => {
-    const fetchUser = () => {
-      const userCookie = getCookie("user");
-      if (userCookie && typeof userCookie === "string") {
-        try {
-          setUser(JSON.parse(userCookie));
-        } catch (error) {
-          setUser(null);
-        }
-      } else {
+  const fetchUser = () => {
+    const userCookie = getCookie("user");
+    if (userCookie && typeof userCookie === "string") {
+      try {
+        setUser(JSON.parse(userCookie));
+      } catch {
         setUser(null);
       }
-    };
+    } else {
+      setUser(null);
+    }
+  };
 
+  const handleLogout = () => {
+    startTransition(() => {
+      logoutUser().then(() => {
+        toast.success("Logged out successfully");
+        setUser(null);
+        window.location.href = "/login";
+      });
+    });
+  };
+
+  useEffect(() => {
     fetchUser();
-
     window.addEventListener("userLoginStatusChanged", fetchUser);
-
     return () => {
       window.removeEventListener("userLoginStatusChanged", fetchUser);
     };
   }, []);
 
-  const handleLogout = () => {
-    deleteCookie("user");
-    setUser(null);
-    window.location.href = "/login";
-  };
+
 
   const navItems = (
     <>
@@ -73,8 +77,10 @@ const Navbar1 = () => {
           </Link>
         </li>
       ))}
+
       <li className="flex items-center px-3 py-2">
         <label className="flex gap-2 cursor-pointer select-none">
+          {/* Sun Icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -95,6 +101,7 @@ const Navbar1 = () => {
             checked={theme === "dark"}
             className="toggle theme-controller"
           />
+          {/* Moon Icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -106,11 +113,11 @@ const Navbar1 = () => {
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
           </svg>
         </label>
       </li>
-    
+
       <li className="lg:hidden mt-2 border-t border-gray-700 pt-2">
         <a
           href="https://drive.google.com/file/d/1OxYll_P_45jmlzNvZVTGKABn4ZTJRCP2/view?usp=drive_link"
@@ -145,19 +152,21 @@ const Navbar1 = () => {
       <div className="navbar-start">
         <div className="dropdown">
           <button tabIndex={0} className="btn btn-ghost lg:hidden">
+            {/* Hamburger Icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
+              width="24"
+              height="24"
               viewBox="0 0 24 24"
+              fill="none"
               stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16"
-              />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
           </button>
           <ul
@@ -187,6 +196,7 @@ const Navbar1 = () => {
           ))}
           <li>
             <label className="flex gap-2 items-center cursor-pointer select-none px-3 py-2 rounded hover:text-teal-700">
+              {/* Reused theme toggle */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -218,7 +228,7 @@ const Navbar1 = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
               </svg>
             </label>
           </li>

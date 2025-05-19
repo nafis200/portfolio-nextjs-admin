@@ -1,10 +1,8 @@
-import { authOptions } from "@/utils/authOptions";
-import { getServerSession } from "next-auth";
+
 import Image from "next/image";
 
 const DashboardPage = async () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const session = await getServerSession(authOptions);
+
    return (
     <div className="px-4 sm:px-6 md:px-10 lg:ml-[130px]">
       

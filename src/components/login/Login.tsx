@@ -4,22 +4,23 @@ import { useForm } from "react-hook-form";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { loginUser } from "@/utils/actions/CreateLogin";
-import { setCookie } from "cookies-next";
-import { redirect } from 'next/navigation'
+
+
 type LoginFormInputs = {
   email: string;
   password: string;
 };
 
 const Login = () => {
- 
-
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginFormInputs>();
+
+  const router = useRouter();
 
   const onSubmit = async (data: LoginFormInputs) => {
     const res = await loginUser(data);
@@ -29,15 +30,14 @@ const Login = () => {
       return;
     }
 
-    const { role, email } = res?.data?.jwtPayload;
+    const { role } = res.data.jwtPayload;
 
     if (role === "admin") {
-      setCookie("user", JSON.stringify({ email, role }), {
-        maxAge: 60 * 60 * 24,
-      });
       toast.success("Welcome Admin!");
-       window.dispatchEvent(new Event("userLoginStatusChanged"));
-      redirect('/dashboard')
+      window.dispatchEvent(new Event("userLoginStatusChanged"));
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000);
     } else {
       toast.error("You are not an admin");
     }
@@ -46,7 +46,8 @@ const Login = () => {
   return (
     <div className="w-[90%] max-w-5xl mx-auto py-10">
       <h1 className="text-center mt-20 text-4xl mb-8 font-bold">
-        Login <span className="text-teal-500">Only for admin not general user</span>
+        Login{" "}
+        <span className="text-teal-500">Only for admin not general user</span>
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div>
@@ -69,7 +70,9 @@ const Login = () => {
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-teal-500"
               />
               {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
@@ -87,15 +90,20 @@ const Login = () => {
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-teal-500"
               />
               {errors.password && (
-                <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
             <button
               type="submit"
-              className="w-full bg-teal-500 text-white py-2 rounded-md hover:bg-teal-600 transition"
+              disabled={isSubmitting}
+              className={`w-full bg-teal-500 text-white py-2 rounded-md transition ${
+                isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-teal-600"
+              }`}
             >
-              Login
+              {isSubmitting ? "Logging in..." : "Login"}
             </button>
           </form>
 
