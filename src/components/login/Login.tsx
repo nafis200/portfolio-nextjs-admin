@@ -5,16 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
 import { loginUser } from "@/utils/actions/CreateLogin";
-import { useRouter } from "next/navigation";
 import { setCookie } from "cookies-next";
-
+import { redirect } from 'next/navigation'
 type LoginFormInputs = {
   email: string;
   password: string;
 };
 
 const Login = () => {
-  const router = useRouter();
+ 
 
   const {
     register,
@@ -38,7 +37,7 @@ const Login = () => {
       });
       toast.success("Welcome Admin!");
        window.dispatchEvent(new Event("userLoginStatusChanged"));
-      router.push("/dashboard"); 
+      redirect('/dashboard')
     } else {
       toast.error("You are not an admin");
     }

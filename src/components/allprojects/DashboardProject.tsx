@@ -48,10 +48,10 @@ const DashboardProject = () => {
           Projects
         </h2>
       </Fade>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mt-20">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mt-20 auto-rows-fr">
         {project?.map((proj) => (
           <Zoom key={proj._id}>
-            <div className="skill-category bg-base-100 border-2 border-blue-400 hover:border-cyan-300 p-6 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-200 transition-shadow duration-300">
+            <div className="skill-category bg-base-100 border-2 border-blue-400 hover:border-cyan-300 p-6 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-200 transition-shadow duration-300 flex flex-col h-full">
               <div className="project-image mb-4">
                 <Image
                   src={proj.image}

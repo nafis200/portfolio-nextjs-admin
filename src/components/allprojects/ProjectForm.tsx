@@ -66,6 +66,9 @@ const ProjectForm = () => {
       })
     );
 
+    const data = submissionData.get("data") as string;
+   console.log(data);
+
     try {
       const res = await createProject(submissionData);
       console.log(res)
